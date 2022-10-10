@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world-upwork
+spec:
+  selector:
+    matchLabels:
+      app: hello-world-upwork
+  template:
+    metadata:
+      labels:
+        app: hello-world-upwork
+    spec:
+      containers:
+      - image: okteto.dev/hello-world-upwork:1.0.17
+        name: hello-world-upwork
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world-upwork
+spec:
+  type: ClusterIP
+  ports:
+    - name: "hello-world-upwork"
+      port: 8882
+    - name: "hello-world-upwork-admin"
+      port: 8883
+  selector:
+    app: hello-world-upwork
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-world-upwork
+  annotations:
+    dev.okteto.com/generate-host: hello-world-upwork
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: hello-world-upwork
+                port:
+                  number: 8882
+            path: /
+            pathType: ImplementationSpecific
+          - backend:
+              service:
+                name: hello-world-upwork
+                port:
+                  number: 8883
+            path: /admin
+            pathType: ImplementationSpecific
