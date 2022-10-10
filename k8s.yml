@@ -1,58 +1,58 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world-upwork
+  name: hello-world-dropwizard
 spec:
   selector:
     matchLabels:
-      app: hello-world-upwork
+      app: hello-world-dropwizard
   template:
     metadata:
       labels:
-        app: hello-world-upwork
+        app: hello-world-dropwizard
     spec:
       containers:
-      - image: okteto.dev/hello-world-upwork:1.0.17
-        name: hello-world-upwork
+      - image: nicolasfagotti/hello-world-dropwizard:1.0.17
+        name: hello-world-dropwizard
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world-upwork
+  name: hello-world-dropwizard
 spec:
   type: ClusterIP
   ports:
-    - name: "hello-world-upwork"
+    - name: "hello-world-dropwizard"
       port: 8882
-    - name: "hello-world-upwork-admin"
+    - name: "hello-world-dropwizard-admin"
       port: 8883
   selector:
-    app: hello-world-upwork
+    app: hello-world-dropwizard
 
 ---
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hello-world-upwork
+  name: hello-world-dropwizard
   annotations:
-    dev.okteto.com/generate-host: hello-world-upwork
+    dev.okteto.com/generate-host: hello-world-dropwizard
 spec:
   rules:
     - http:
         paths:
           - backend:
               service:
-                name: hello-world-upwork
+                name: hello-world-dropwizard
                 port:
                   number: 8882
             path: /
             pathType: ImplementationSpecific
           - backend:
               service:
-                name: hello-world-upwork
+                name: hello-world-dropwizard
                 port:
                   number: 8883
             path: /admin
