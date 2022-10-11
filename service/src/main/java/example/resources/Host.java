@@ -45,7 +45,6 @@ public class Host {
         } else {
             throw new RuntimeException("Entry is not properly formatted");
         }
-
         return Response.ok(result).build();
     }
 
