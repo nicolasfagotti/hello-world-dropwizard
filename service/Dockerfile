@@ -1,7 +1,6 @@
 FROM openjdk:17-alpine
 MAINTAINER nfagotti
 
-
 WORKDIR /var/hello-world
 
 ADD target/service-1.0-SNAPSHOT.jar /var/hello-world/service-1.0-SNAPSHOT.jar
