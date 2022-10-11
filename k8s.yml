@@ -31,29 +31,3 @@ spec:
   selector:
     app: hello-world-dropwizard
 
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: hello-world-dropwizard
-  annotations:
-    dev.okteto.com/generate-host: hello-world-dropwizard
-spec:
-  rules:
-    - http:
-        paths:
-          - backend:
-              service:
-                name: hello-world-dropwizard
-                port:
-                  number: 8882
-            path: /
-            pathType: ImplementationSpecific
-          - backend:
-              service:
-                name: hello-world-dropwizard
-                port:
-                  number: 8883
-            path: /admin
-            pathType: ImplementationSpecific
