@@ -13,7 +13,7 @@ spec:
         app: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.0.17
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.0
         name: hello-world-dropwizard
   strategy:
     canary:
