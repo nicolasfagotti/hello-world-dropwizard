@@ -11,6 +11,7 @@ spec:
     metadata:
       labels:
         app: hello-world-dropwizard
+        backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
       - image: nicolasfagotti/hello-world-dropwizard:1.17.0
