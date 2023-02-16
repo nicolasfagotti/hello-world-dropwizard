@@ -50,9 +50,7 @@ spec:
       - setWeight: 90
       - pause:
           duration: 10
-
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -68,3 +66,70 @@ spec:
       port: 8883
   selector:
     app: hello-world-dropwizard
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Experiment
+metadata:
+  name: example-experiment
+spec:
+  duration: 20m
+  progressDeadlineSeconds: 60
+  templates:
+  - name: purple
+    replicas: 1
+    selector:
+      matchLabels:
+        app: canary-demo
+        color: purple
+    template:
+      metadata:
+        labels:
+          app: canary-demo
+          color: purple
+      spec:
+        containers:
+        - name: rollouts-demo
+          image: argoproj/rollouts-demo:purple
+          imagePullPolicy: Always
+          ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+  - name: orange
+    replicas: 1
+    minReadySeconds: 10
+    selector:
+      matchLabels:
+        app: canary-demo
+        color: orange
+    template:
+      metadata:
+        labels:
+          app: canary-demo
+          color: orange
+      spec:
+        containers:
+        - name: rollouts-demo
+          image: argoproj/rollouts-demo:orange
+          imagePullPolicy: Always
+          ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+  analyses:
+  - name: purple
+    templateName: http-benchmark
+    args:
+    - name: host
+      value: purple
+  - name: orange
+    templateName: http-benchmark
+    args:
+    - name: host
+      value: orange
+  - name: compare-results
+    templateName: compare
+    requiredForCompletion: true
+    args:
+    - name: host
+      value: purple
