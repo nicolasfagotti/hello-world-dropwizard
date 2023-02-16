@@ -67,54 +67,55 @@ spec:
   selector:
     app: hello-world-dropwizard
 ---
+
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Experiment
 metadata:
-  name: example-experiment
+  name: hello-world-experiment
 spec:
   duration: 20m
   progressDeadlineSeconds: 60
   templates:
-  - name: purple
+  - name: version-1.17.0
     replicas: 1
     selector:
       matchLabels:
-        app: canary-demo
-        color: purple
+        app: canary-hello
+        version: vesion-0
     template:
       metadata:
         labels:
-          app: canary-demo
-          color: purple
+          app: canary-hello
+          version: version-0
       spec:
         containers:
-        - name: rollouts-demo
-          image: argoproj/rollouts-demo:purple
+        - name: rollouts-hello
+          image: nicolasfagotti/hello-world-dropwizard:1.17.0
           imagePullPolicy: Always
           ports:
           - name: http
-            containerPort: 8080
+            containerPort: 8882
             protocol: TCP
-  - name: orange
+  - name: version-1.17.1
     replicas: 1
-    minReadySeconds: 10
     selector:
       matchLabels:
-        app: canary-demo
-        color: orange
+        app: canary-hello
+        version: version-1
     template:
       metadata:
         labels:
-          app: canary-demo
-          color: orange
+          app: canary-hello
+          version: version-1
       spec:
         containers:
-        - name: rollouts-demo
-          image: argoproj/rollouts-demo:orange
+        - name: rollouts-hello
+          image: nicolasfagotti/hello-world-dropwizard:1.17.1
           imagePullPolicy: Always
           ports:
           - name: http
-            containerPort: 8080
+            containerPort: 8882
             protocol: TCP
   analyses:
   - name: purple
