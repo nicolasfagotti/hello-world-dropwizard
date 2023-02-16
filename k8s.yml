@@ -70,7 +70,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: success-rate
+  name: gloster-success-rate
 spec:
   args:
   - name: service-name
@@ -140,8 +140,10 @@ spec:
             protocol: TCP
   analyses:
   - name: gloster
-    templateName: success-rate
+    templateName: gloster-success-rate
     args:
+    - name: service-name
+      value: helloWorld
     - name: canary-release
       value: testing-canary-pod-hash
     - name: baseline-release
