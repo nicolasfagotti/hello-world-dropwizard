@@ -29,7 +29,8 @@ spec:
           - name: canary
             specRef: canary
           analyses:
-          - templateName: mann-whitney
+          - name: mann-whitney
+            templateName: mann-whitney
             args:
             - name: stable-hash
               valueFrom:
