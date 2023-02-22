@@ -129,6 +129,7 @@ spec:
           marginal: 75
         scopes:
         - name: default
+          region: default
           controlScope:
             scope: app=guestbook and rollouts-pod-template-hash={{args.stable-hash}}
             step: 60
