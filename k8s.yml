@@ -16,7 +16,7 @@ spec:
         "backstage.io/kubernetes-id": "hello-world-dropwizard"
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.1
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.2
         name: hello-world-dropwizard
   strategy:
     canary:
@@ -29,13 +29,14 @@ spec:
           - name: canary
             specRef: canary
           analyses:
-          - name : gloster-success-rate
-            templateName: gloster-success-rate
+          - templateName: mann-whitney
             args:
-            - name: baseline-hash
-              value: "{{templates.baseline.podTemplateHash}}"
+            - name: stable-hash
+              valueFrom:
+                podTemplateHashValue: Stable
             - name: canary-hash
-              value: "{{templates.canary.podTemplateHash}}"
+              valueFrom:
+                podTemplateHashValue: Latest
       - setWeight: 1
       - pause:
           duration: 10
@@ -96,7 +97,7 @@ spec:
     failureLimit: 3
     provider:
       prometheus:
-        address: http://prometheus.example.com:9090
+        address: http://prometheus-operated.prometheus.svc.cluster.local:9090
         query: |
           sum(irate(
             istio_requests_total{reporter="source",destination_service=~"{{args.baseline-hash}}",response_code!~"5.*"}[5m]
@@ -105,61 +106,35 @@ spec:
             istio_requests_total{reporter="source",destination_service=~"{{args.canary-hash}}"}[5m]
           ))
 ---
-#apiVersion: argoproj.io/v1alpha1
-#kind: Experiment
-#metadata:
-#  name: hello-world-experiment
-#spec:
-#  duration: 20m
-#  progressDeadlineSeconds: 60
-#  templates:
-#  - name: version-1.17.0
-#    replicas: 1
-#    selector:
-#      matchLabels:
-#        app: canary-hello
-#        version: vesion-0
-#    template:
-#      metadata:
-#        labels:
-#          app: canary-hello
-#          version: version-0
-#      spec:
-#        containers:
-#        - name: rollouts-hello
-#          image: nicolasfagotti/hello-world-dropwizard:1.17.0
-#          imagePullPolicy: Always
-#          ports:
-#          - name: http
-#            containerPort: 8882
-#            protocol: TCP
-#  - name: version-1.17.1
-#    replicas: 1
-#    selector:
-#      matchLabels:
-#        app: canary-hello
-#        version: version-1
-#    template:
-#      metadata:
-#        labels:
-#          app: canary-hello
-#          version: version-1
-#      spec:
-#        containers:
-#        - name: rollouts-hello
-#          image: nicolasfagotti/hello-world-dropwizard:1.17.1
-#          imagePullPolicy: Always
-#          ports:
-#          - name: http
-#            containerPort: 8882
-#            protocol: TCP
-#  analyses:
-#  - name: gloster
-#    templateName: gloster-success-rate
-#    args:
-#    - name: service-name
-#      value: helloWorld
-#    - name: canary-release
-#      value: testing-canary-pod-hash
-#    - name: baseline-release
-#      value: testing-baseline-pod-hash
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: mann-whitney
+spec:
+  args:
+  - name: start-time
+  - name: end-time
+  - name: stable-hash
+  - name: canary-hash
+  metrics:
+  - name: mann-whitney
+    provider:
+      kayenta:
+        address: http://kayenta-load-balancer.kayenta.svc.cluster.local:8090
+        application: guestbook
+        canaryConfigName: my-test
+        thresholds:
+          pass: 90
+          marginal: 75
+        scopes:
+        - name: default
+          controlScope:
+            scope: app=guestbook and rollouts-pod-template-hash={{args.stable-hash}}
+            step: 60
+            start: "{{args.start-time}}"
+            end: "{{args.end-time}}"
+          experimentScope:
+            scope: app=guestbook and rollouts-pod-template-hash={{args.canary-hash}}
+            step: 60
+            start: "{{args.start-time}}"
+            end: "{{args.end-time}}"
