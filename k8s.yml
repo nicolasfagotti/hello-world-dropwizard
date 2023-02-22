@@ -123,19 +123,23 @@ spec:
       kayenta:
         address: http://kayenta-load-balancer.kayenta.svc.cluster.local:8090
         application: guestbook
+        metricsAccountName: my-test
+        configurationAccountName: my-test
+        storageAccountName: my-test
         canaryConfigName: my-test
-        thresholds:
+        threshold:
           pass: 90
           marginal: 75
         scopes:
         - name: default
-          region: default
           controlScope:
+            region: default
             scope: app=guestbook and rollouts-pod-template-hash={{args.stable-hash}}
             step: 60
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
           experimentScope:
+            region: default
             scope: app=guestbook and rollouts-pod-template-hash={{args.canary-hash}}
             step: 60
             start: "{{args.start-time}}"
