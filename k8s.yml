@@ -32,6 +32,10 @@ spec:
           - name: mann-whitney
             templateName: mann-whitney
             args:
+            - name: start-time
+              value: "2023-02-23T10:00:00Z"
+            - name: end-time
+              value: "2023-02-23T11:00:00Z"
             - name: stable-hash
               valueFrom:
                 podTemplateHashValue: Stable
