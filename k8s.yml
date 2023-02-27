@@ -22,12 +22,14 @@ spec:
     canary:
       steps:
       - experiment:
-          duration: 1h
+          duration: 5m
           templates:
           - name: baseline
             specRef: stable
+            weight: 5
           - name: canary
             specRef: canary
+            weight: 5
           analyses:
           - name: aca-analyzer
             templateName: aca-analyzer
@@ -139,6 +141,8 @@ spec:
   metrics:
   - name: aca-analyzer
     successCondition: result == true
+    interval: 60s
+    count: 5
     provider:
       web:
         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/{{ args.stable-hash }}/{{ args.canary-hash }}"
