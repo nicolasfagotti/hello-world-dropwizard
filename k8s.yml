@@ -16,32 +16,11 @@ spec:
         "backstage.io/kubernetes-id": "hello-world-dropwizard"
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.0
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.3
         name: hello-world-dropwizard
   strategy:
     canary:
       steps:
-      - experiment:
-          duration: 1h
-          templates:
-          - name: baseline
-            specRef: stable
-          - name: canary
-            specRef: canary
-          analyses:
-          - name: mann-whitney
-            templateName: mann-whitney
-            args:
-            - name: start-time
-              value: "{{ experiment.availableAt }}"
-            - name: end-time
-              value: "{{ experiment.finishedAt }}"
-            - name: stable-hash
-              valueFrom:
-                podTemplateHashValue: Stable
-            - name: canary-hash
-              valueFrom:
-                podTemplateHashValue: Latest
       - setWeight: 1
       - pause:
           duration: 10
@@ -87,64 +66,3 @@ spec:
       port: 8883
   selector:
     app: hello-world-dropwizard
----
-apiVersion: argoproj.io/v1alpha1
-kind: AnalysisTemplate
-metadata:
-  name: gloster-success-rate
-spec:
-  args:
-  - name: service-name
-  metrics:
-  - name: success-rate
-    interval: 5m
-    successCondition: result[0] >= 0.95
-    failureLimit: 3
-    provider:
-      prometheus:
-        address: http://prometheus-operated.prometheus.svc.cluster.local:9090
-        query: |
-          sum(irate(
-            istio_requests_total{reporter="source",destination_service=~"{{args.baseline-hash}}",response_code!~"5.*"}[5m]
-          )) /
-          sum(irate(
-            istio_requests_total{reporter="source",destination_service=~"{{args.canary-hash}}"}[5m]
-          ))
----
-apiVersion: argoproj.io/v1alpha1
-kind: AnalysisTemplate
-metadata:
-  name: mann-whitney
-spec:
-  args:
-  - name: start-time
-  - name: end-time
-  - name: stable-hash
-  - name: canary-hash
-  metrics:
-  - name: mann-whitney
-    provider:
-      kayenta:
-        address: http://kayenta-load-balancer.kayenta.svc.cluster.local:8090
-        application: hello-world-dropwizard
-        metricsAccountName: my-test
-        configurationAccountName: my-test
-        storageAccountName: my-test
-        canaryConfigName: my-test
-        threshold:
-          pass: 90
-          marginal: 75
-        scopes:
-        - name: default
-          controlScope:
-            region: default
-            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
-            step: 60
-            start: "{{args.start-time}}"
-            end: "{{args.end-time}}"
-          experimentScope:
-            region: default
-            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
-            step: 60
-            start: "{{args.start-time}}"
-            end: "{{args.end-time}}"
