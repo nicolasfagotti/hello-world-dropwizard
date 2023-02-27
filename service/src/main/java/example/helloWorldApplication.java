@@ -1,5 +1,6 @@
 package example;
 
+import example.resources.Analysis;
 import example.resources.Host;
 import example.resources.Hello;
 import io.dropwizard.Application;
@@ -28,5 +29,6 @@ public class helloWorldApplication extends Application<helloWorldConfiguration> 
         // TODO: implement application
         environment.jersey().register(new Host());
         environment.jersey().register(new Hello());
+        environment.jersey().register(new Analysis());
     }
 }
