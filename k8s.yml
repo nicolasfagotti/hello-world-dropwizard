@@ -20,16 +20,22 @@ spec:
         name: hello-world-dropwizard
   strategy:
     canary:
+#      trafficRouting:
+#        istio:
+#          virtualService:
+#            name: rollout-vsvc # required
+#            routes:
+#            - primary
       steps:
       - experiment:
           duration: 5m
           templates:
           - name: baseline
             specRef: stable
-            weight: 5
+#            weight: 5
           - name: canary
             specRef: canary
-            weight: 5
+#            weight: 5
           analyses:
           - name: aca-analyzer
             templateName: aca-analyzer
