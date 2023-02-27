@@ -16,7 +16,7 @@ spec:
         "backstage.io/kubernetes-id": "hello-world-dropwizard"
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.2
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.3
         name: hello-world-dropwizard
   strategy:
     canary:
@@ -28,7 +28,7 @@ spec:
 #            - primary
       steps:
       - experiment:
-          duration: 5m
+          duration: 3m
           templates:
           - name: baseline
             specRef: stable
@@ -39,6 +39,7 @@ spec:
           analyses:
           - name: aca-analyzer
             templateName: aca-analyzer
+            requiredForCompletion: true
             args:
             - name: start-time
               value: "{{ experiment.availableAt }}"
@@ -147,7 +148,7 @@ spec:
   metrics:
   - name: aca-analyzer
     successCondition: result == true
-    interval: 60s
+    interval: 30s
     count: 5
     provider:
       web:
