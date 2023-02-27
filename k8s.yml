@@ -1,23 +1,23 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: hello-world-dropwizard
+  name: aca-analyzer
   labels:
-    backstage.io/kubernetes-id: hello-world-dropwizard
+    backstage.io/kubernetes-id: aca-analyzer
 spec:
   selector:
     matchLabels:
-      app: hello-world-dropwizard
+      app: aca-analyzer
   replicas: 2
   template:
     metadata:
       labels:
-        app: hello-world-dropwizard
-        "backstage.io/kubernetes-id": "hello-world-dropwizard"
+        app: aca-analyzer
+        "backstage.io/kubernetes-id": "aca-analyzer"
     spec:
       containers:
       - image: nicolasfagotti/hello-world-dropwizard:1.17.3
-        name: hello-world-dropwizard
+        name: aca-analyzer
   strategy:
     canary:
       steps:
@@ -54,15 +54,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-world-dropwizard
+  name: aca-analyzer
   labels:
-    backstage.io/kubernetes-id: hello-world-dropwizard
+    backstage.io/kubernetes-id: aca-analyzer
 spec:
   type: ClusterIP
   ports:
-    - name: "hello-world-dropwizard"
+    - name: "aca-analyzer"
       port: 8882
-    - name: "hello-world-dropwizard-admin"
+    - name: "aca-analyzer-admin"
       port: 8883
   selector:
-    app: hello-world-dropwizard
+    app: aca-analyzer
