@@ -17,7 +17,7 @@ spec:
         "backstage.io/kubernetes-id": "hello-world-dropwizard"
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.0
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.1
         name: hello-world-dropwizard
   strategy:
     canary:
@@ -68,7 +68,8 @@ spec:
       - pause:
           duration: 10
       - setWeight: 50
-      - pause: {}
+      - pause:
+          duration: 10
       - setWeight: 60
       - pause:
           duration: 10
