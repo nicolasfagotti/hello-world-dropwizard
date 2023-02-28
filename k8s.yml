@@ -132,14 +132,14 @@ spec:
             step: 60
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
-            region: "us-west-2"
+            region: "default"
           experimentScope:
             scope: rollouts-pod-template-hash={{args.canary-hash}}
 #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
             step: 60
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
-            region: "us-west-2"
+            region: "default"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
