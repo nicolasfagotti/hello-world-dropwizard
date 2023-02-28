@@ -96,14 +96,17 @@ spec:
   - name: canary-hash
   metrics:
   - name: mann-whitney
+    interval: 30s
+    failureLimit: 1
+    count: 5
     provider:
       kayenta:
         address: http://kayenta-load-balancer.kayenta.svc.cluster.local:8090
         application: hello-world-dropwizard
-        metricsAccountName: my-test
-        configurationAccountName: my-test
-        storageAccountName: my-test
-        canaryConfigName: my-test
+        metricsAccountName: canary-prometheus
+        canaryConfigName: canary-14
+        configurationAccountName: in-memory-store-account
+        storageAccountName: in-memory-store-account
         threshold:
           pass: 90
           marginal: 75
@@ -111,16 +114,20 @@ spec:
         - name: default
           controlScope:
             region: default
-            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
+            scope: rolloutspodtemplatehash="{{args.stable-hash}}"
+#            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
             step: 60
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
+            region: "us-west-2"
           experimentScope:
             region: default
-            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
+            scope: rolloutspodtemplatehash="{{args.canary-hash}}"
+#            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
             step: 60
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
+            region: "us-west-2"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
@@ -136,6 +143,7 @@ spec:
   - name: aca-analyzer
     successCondition: result == true
     interval: 30s
+    failureLimit: 1
     count: 5
     provider:
       web:
