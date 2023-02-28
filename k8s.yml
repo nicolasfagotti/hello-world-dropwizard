@@ -4,6 +4,10 @@ metadata:
   name: hello-world-dropwizard
   labels:
     backstage.io/kubernetes-id: hello-world-dropwizard
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: '8883'
+    prometheus.io/scrape: 'true'
 spec:
   selector:
     matchLabels:
