@@ -9,7 +9,7 @@ spec:
     matchLabels:
       app: hello-world-dropwizard
   replicas: 2
-  revisionHistoryLimit: 0 # Default to 10 if not specified
+  revisionHistoryLimit: 1 # Default to 10 if not specified
   template:
     metadata:
       labels:
@@ -17,7 +17,7 @@ spec:
         "backstage.io/kubernetes-id": "hello-world-dropwizard"
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.3
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.0
         name: hello-world-dropwizard
   strategy:
     canary:
