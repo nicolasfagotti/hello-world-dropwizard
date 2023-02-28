@@ -15,10 +15,6 @@ spec:
       labels:
         app: hello-world-dropwizard
         backstage.io/kubernetes-id: hello-world-dropwizard
-      annotations:
-        prometheus.io/path: /metrics
-        prometheus.io/port: '8883'
-        prometheus.io/scrape: 'true'
     spec:
       containers:
       - image: nicolasfagotti/hello-world-dropwizard:1.17.4
