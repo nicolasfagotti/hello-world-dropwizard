@@ -127,7 +127,6 @@ spec:
         scopes:
         - name: default
           controlScope:
-            region: default
             scope: rolloutspodtemplatehash="{{args.stable-hash}}"
 #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
             step: 60
@@ -135,7 +134,6 @@ spec:
             end: "{{args.end-time}}"
             region: "us-west-2"
           experimentScope:
-            region: default
             scope: rolloutspodtemplatehash="{{args.canary-hash}}"
 #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
             step: 60
