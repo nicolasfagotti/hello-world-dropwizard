@@ -9,6 +9,7 @@ spec:
     matchLabels:
       app: hello-world-dropwizard
   replicas: 2
+  revisionHistoryLimit: 0 # Default to 10 if not specified
   template:
     metadata:
       labels:
