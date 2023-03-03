@@ -17,7 +17,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.3
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.4
         name: hello-world-dropwizard
   strategy:
     canary:
@@ -142,7 +142,6 @@ spec:
     successCondition: result == true
     interval: 30s
     failureLimit: 1
-    count: 5
     provider:
       web:
         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/{{ args.stable-hash }}/{{ args.canary-hash }}"
