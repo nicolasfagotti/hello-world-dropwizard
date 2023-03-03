@@ -29,6 +29,7 @@ spec:
 #            - primary
       steps:
         - experiment:
+            terminate: true
             duration: 3m
             templates:
             - name: baseline
@@ -132,7 +133,6 @@ kind: AnalysisTemplate
 metadata:
   name: aca-analyzer
 spec:
-  terminate: true
   args:
   - name: start-time
   - name: end-time
