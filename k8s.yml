@@ -5,6 +5,7 @@ metadata:
   labels:
     backstage.io/kubernetes-id: hello-world-dropwizard
 spec:
+  terminate: true
   selector:
     matchLabels:
       app: hello-world-dropwizard
@@ -29,7 +30,6 @@ spec:
 #            - primary
       steps:
         - experiment:
-            terminate: true
             duration: 3m
             templates:
             - name: baseline
