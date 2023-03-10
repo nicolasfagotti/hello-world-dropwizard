@@ -21,22 +21,14 @@ spec:
         name: hello-world-dropwizard
   strategy:
     canary:
-#      trafficRouting:
-#        istio:
-#          virtualService:
-#            name: rollout-vsvc # required
-#            routes:
-#            - primary
       steps:
         - experiment:
             duration: 3m
             templates:
             - name: baseline
               specRef: stable
-  #            weight: 5
             - name: canary
               specRef: canary
-  #            weight: 5
             analyses:
             - name: aca-analyzer
               templateName: aca-analyzer
@@ -96,7 +88,7 @@ spec:
   - name: canary-hash
   metrics:
   - name: mann-whitney
-    interval: 30s
+    interval: 60s
     failureLimit: 1
     count: 5
     provider:
@@ -113,19 +105,19 @@ spec:
         scopes:
         - name: default
           controlScope:
-            scope: rollouts-pod-template-hash={{args.stable-hash}}
 #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
-            step: 60
+            scope: rollouts-pod-template-hash={{args.stable-hash}}
+            step: 30                      # How many seconds between each metric datapoint to query
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
-            region: "default"
+            region: "upwork-services"     # This can be anything. It is only used for building queries
           experimentScope:
-            scope: rollouts-pod-template-hash={{args.canary-hash}}
 #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
-            step: 60
+            scope: rollouts-pod-template-hash={{args.canary-hash}}
+            step: 30
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
-            region: "default"
+            region: "upwork-services"
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
@@ -139,11 +131,12 @@ spec:
   - name: canary-hash
   metrics:
   - name: aca-analyzer
-    successCondition: result == true
-    interval: 30s
+    count: 5
     failureLimit: 1
+    interval: 30s
     provider:
       web:
         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/{{ args.stable-hash }}/{{ args.canary-hash }}"
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.data.ok}"
+    successCondition: result == true
