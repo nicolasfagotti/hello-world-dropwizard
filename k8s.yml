@@ -17,21 +17,21 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.3
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.4
         name: hello-world-dropwizard
   strategy:
     canary:
       steps:
         - experiment:
-            duration: 3m
+            duration: 3h
             templates:
             - name: baseline
               specRef: stable
             - name: canary
               specRef: canary
             analyses:
-            - name: aca-analyzer
-              templateName: aca-analyzer
+            - name: mann-whitney
+              templateName: mann-whitney
               requiredForCompletion: true
               args:
               - name: start-time
