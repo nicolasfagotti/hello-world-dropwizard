@@ -96,7 +96,7 @@ spec:
         address: http://kayenta-load-balancer.kayenta.svc.cluster.local:8090
         application: hello-world-dropwizard
         metricsAccountName: canary-prometheus
-        canaryConfigName: canary-14
+        canaryConfigName: hello-world-config
         configurationAccountName: in-memory-store-account
         storageAccountName: in-memory-store-account
         threshold:
