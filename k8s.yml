@@ -106,14 +106,14 @@ spec:
         - name: default
           controlScope:
 #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
-            scope: "rollouts-pod-template-hash=\"{{args.stable-hash}}\""
+            scope: "rollouts_pod_template_hash=\"{{args.stable-hash}}\""
             step: 30                      # How many seconds between each metric datapoint to query
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
             region: "upwork-services"     # This can be anything. It is only used for building queries
           experimentScope:
 #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
-            scope: "rollouts-pod-template-hash=\"{{args.canary-hash}}\""
+            scope: "rollouts_pod_template_hash=\"{{args.canary-hash}}\""
             step: 30
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
