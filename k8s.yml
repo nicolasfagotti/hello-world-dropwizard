@@ -76,7 +76,7 @@ metadata:
   name: helloworld-vsvc
 spec:
   gateways:
-    - ingress-http
+    - istio-ingress/ingress-http
   hosts:
     - helloworld.local
   http:
