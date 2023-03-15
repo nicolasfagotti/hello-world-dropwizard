@@ -110,7 +110,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: rollout-destrule
+  name: helloworld-destrule
 spec:
   host: rollouts-helloworld
   subsets:
