@@ -16,7 +16,7 @@ spec:
         "backstage.io/kubernetes-id": "aca-analyzer"
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: aca-analyzer
   strategy:
     canary:
