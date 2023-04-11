@@ -44,7 +44,7 @@ spec:
               templateName: gloster-analyzer
               requiredForCompletion: true
               args:
-              - name: start-time
+              - name: service-name
                 value: "testDS"
               - name: start-time
                 value: "{{ experiment.availableAt }}"
