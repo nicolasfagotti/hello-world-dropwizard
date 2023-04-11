@@ -200,7 +200,7 @@ spec:
     initialDelay: 1m
     count: 5
     interval: 2m
-    failureLimit: 3
+    failureLimit: 4
     provider:
       web:
         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/process/{{ args.service-name }}/score"
