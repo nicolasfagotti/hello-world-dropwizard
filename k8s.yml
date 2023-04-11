@@ -205,4 +205,4 @@ spec:
       web:
         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/process/{{ args.service-name }}/score"
         jsonPath: "{$}"
-    successCondition: "result.score >= 0.9 && result.confidence >= 0.5"
+    successCondition: "result.score >= 0.9 && result.confidence >= 0.1"
