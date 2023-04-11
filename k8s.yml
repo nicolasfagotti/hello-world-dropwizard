@@ -17,7 +17,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.3
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
   strategy:
     canary:
@@ -40,10 +40,12 @@ spec:
             - name: canary
               specRef: canary
             analyses:
-            - name: mann-whitney
-              templateName: mann-whitney
+            - name: gloster-analyzer
+              templateName: gloster-analyzer
               requiredForCompletion: true
               args:
+              - name: start-time
+                value: "testDS"
               - name: start-time
                 value: "{{ experiment.availableAt }}"
               - name: end-time
@@ -185,3 +187,22 @@ spec:
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.data.ok}"
     successCondition: result == true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: gloster-analyzer
+spec:
+  args:
+  - name: service-name
+  metrics:
+  - name: gloster-analyzer
+    initialDelay: 1m
+    count: 5
+    interval: 2m
+    failureLimit: 3
+    provider:
+      web:
+        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/process/{{ args.service-name }}/score"
+        jsonPath: "{$}"
+    successCondition: "result.score >= 0.9 && result.confidence >= 0.5"
