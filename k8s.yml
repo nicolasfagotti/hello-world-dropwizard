@@ -17,7 +17,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
   strategy:
     canary:
@@ -197,9 +197,9 @@ spec:
   - name: service-name
   metrics:
   - name: gloster-analyzer
-    initialDelay: 1m
+    initialDelay: "0"
     count: 5
-    interval: 2m
+    interval: 30s
     failureLimit: 4
     provider:
       web:
