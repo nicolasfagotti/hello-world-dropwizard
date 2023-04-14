@@ -37,8 +37,8 @@ spec:
             templates:
             - name: baseline
               specRef: stable
-#              service:
-#                name: test-service
+              service:
+                name: test-service
             - name: canary
               specRef: canary
             analyses:
