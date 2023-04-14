@@ -27,12 +27,8 @@ spec:
             templates:
             - name: baseline
               specRef: stable
-              service:
-                name: test-service-baseline
             - name: canary
               specRef: canary
-              service:
-                name: test-service-canary
             analyses:
             - name: gloster-analyzer
               templateName: gloster-analyzer
