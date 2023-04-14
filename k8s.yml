@@ -21,6 +21,16 @@ spec:
         name: hello-world-dropwizard
   strategy:
     canary:
+      trafficRouting:
+        istio:
+          destinationRule:
+            name: helloworld-destrule
+            canarySubsetName: canary
+            stableSubsetName: stable
+          virtualService:
+            name: helloworld-vsvc
+            routes:
+              - primary
       steps:
         - experiment:
             duration: 3h
@@ -28,11 +38,9 @@ spec:
             - name: baseline
               specRef: stable
               service:
-                name: test-service-baseline
+                name: test-service
             - name: canary
               specRef: canary
-              service:
-                name: test-service-canary
             analyses:
             - name: gloster-analyzer
               templateName: gloster-analyzer
