@@ -17,7 +17,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
         name: hello-world-dropwizard
   strategy:
     canary:
@@ -33,18 +33,64 @@ spec:
 #              - primary
       steps:
         - experiment:
-            duration: 3h
+            duration: 5m
             templates:
             - name: baseline
               specRef: stable
-#              service:
-#                name: test-service
             - name: canary
               specRef: canary
             analyses:
             - name: gloster-analyzer
               templateName: gloster-analyzer
-              requiredForCompletion: true
+#              requiredForCompletion: true
+              args:
+              - name: service-name
+                value: "testDS"
+              - name: start-time
+                value: "{{ experiment.availableAt }}"
+              - name: end-time
+                value: "{{ experiment.finishedAt }}"
+              - name: stable-hash
+                valueFrom:
+                  podTemplateHashValue: Stable
+              - name: canary-hash
+                valueFrom:
+                  podTemplateHashValue: Latest
+        - experiment:
+            duration: 5m
+            templates:
+            - name: baseline
+              specRef: stable
+            - name: canary
+              specRef: canary
+            analyses:
+            - name: aca-analyzer
+              templateName: aca-analyzer
+#              requiredForCompletion: true
+              args:
+              - name: service-name
+                value: "testDS"
+              - name: start-time
+                value: "{{ experiment.availableAt }}"
+              - name: end-time
+                value: "{{ experiment.finishedAt }}"
+              - name: stable-hash
+                valueFrom:
+                  podTemplateHashValue: Stable
+              - name: canary-hash
+                valueFrom:
+                  podTemplateHashValue: Latest
+        - experiment:
+            duration: 5m
+            templates:
+            - name: baseline
+              specRef: stable
+            - name: canary
+              specRef: canary
+            analyses:
+            - name: mann-whitney
+              templateName: mann-whitney
+#              requiredForCompletion: true
               args:
               - name: service-name
                 value: "testDS"
