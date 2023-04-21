@@ -17,20 +17,20 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
   strategy:
     canary:
-#      trafficRouting:
-#        istio:
-#          destinationRule:
-#            name: helloworld-destrule
-#            canarySubsetName: canary
-#            stableSubsetName: stable
-#          virtualService:
-#            name: helloworld-vsvc
-#            routes:
-#              - primary
+      trafficRouting:
+        istio:
+          destinationRule:
+            name: helloworld-destrule
+            canarySubsetName: canary
+            stableSubsetName: stable
+          virtualService:
+            name: helloworld-vsvc
+            routes:
+              - primary
       steps:
         - experiment:
             duration: 5m
