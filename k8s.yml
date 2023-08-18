@@ -4,6 +4,13 @@ metadata:
   name: hello-world-dropwizard
   labels:
     backstage.io/kubernetes-id: hello-world-dropwizard
+  annotations:
+    notifications.argoproj.io/subscribe.on-analysis-run-error.slack: argo-notifications-testing
+    notifications.argoproj.io/subscribe.on-analysis-run-failed.slack: argo-notifications-testing
+    notifications.argoproj.io/subscribe.on-analysis-run-running.slack: argo-notifications-testing
+    notifications.argoproj.io/subscribe.on-rollout-aborted.slack: argo-notifications-testing
+    notifications.argoproj.io/subscribe.on-rollout-completed.slack: argo-notifications-testing
+    notifications.argoproj.io/subscribe.on-rollout-step-completed.slack: argo-notifications-testing
 spec:
   selector:
     matchLabels:
@@ -17,7 +24,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
   strategy:
     canary:
