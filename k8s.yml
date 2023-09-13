@@ -26,6 +26,10 @@ spec:
       containers:
       - image: nicolasfagotti/hello-world-dropwizard:1.17.5
         name: hello-world-dropwizard
+      initContainers:
+      - name: init-myservice
+        image: nicolasfagotti/hello-world-dropwizard:1.17.5
+        command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
   strategy:
     canary:
       trafficRouting:
