@@ -17,8 +17,8 @@ spec:
       app: hello-world-dropwizard
   replicas: 2
   revisionHistoryLimit: 5 # Default to 10 if not specified
-  # rollbackWindow:
-  #   revisions: 3
+  rollbackWindow:
+    revisions: 3
   template:
     metadata:
       labels:
