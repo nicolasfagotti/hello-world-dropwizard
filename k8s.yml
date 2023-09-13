@@ -16,7 +16,9 @@ spec:
     matchLabels:
       app: hello-world-dropwizard
   replicas: 2
-  revisionHistoryLimit: 0 # Default to 10 if not specified
+  revisionHistoryLimit: 5 # Default to 10 if not specified
+  rollbackWindow:
+    revisions: 3
   template:
     metadata:
       labels:
@@ -42,9 +44,6 @@ spec:
             name: helloworld-vsvc
             routes:
               - primary
-      revisionHistoryLimit: 5
-      rollbackWindow:
-        revisions: 3
       scaleDownDelaySeconds: 3600
       steps:
 #        - experiment:
