@@ -26,10 +26,10 @@ spec:
       containers:
       - image: nicolasfagotti/hello-world-dropwizard:1.17.7
         name: hello-world-dropwizard
-      initContainers:
-      - name: init-myservice
-        image: nicolasfagotti/hello-world-dropwizard:1.17.7
-        command: ['sh', '-c', "until curl -s 'http://localhost:8883/healthcheck' | grep -q 'true'; do echo waiting for myservice; sleep 2; done"]
+      # initContainers:
+      # - name: init-healthcheck
+      #   image: nicolasfagotti/hello-world-dropwizard:1.17.7
+      #   command: ['sh', '-c', "until curl -s 'http://localhost:8883/healthcheck' | grep -q 'true'; do echo waiting for healthcheck; sleep 2; done"]
   strategy:
     canary:
       trafficRouting:
@@ -42,6 +42,7 @@ spec:
             name: helloworld-vsvc
             routes:
               - primary
+      scaleDownDelaySeconds: 3600
       steps:
 #        - experiment:
 #            duration: 15m
