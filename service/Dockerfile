@@ -1,6 +1,8 @@
 FROM openjdk:17-alpine
 MAINTAINER nfagotti
 
+RUN apk --no-cache add curl
+
 WORKDIR /var/hello-world
 
 ADD target/service-1.0-SNAPSHOT.jar /var/hello-world/service-1.0-SNAPSHOT.jar
