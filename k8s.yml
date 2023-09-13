@@ -24,12 +24,12 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
       initContainers:
       - name: init-myservice
-        image: nicolasfagotti/hello-world-dropwizard:1.17.5
-        command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+        image: nicolasfagotti/hello-world-dropwizard:1.17.6
+        command: ['sh', '-c', "until curl -s 'http://localhost:8883/healthcheck' | grep -q '"healthy":false'; do echo waiting for myservice; sleep 2; done"]
   strategy:
     canary:
       trafficRouting:
