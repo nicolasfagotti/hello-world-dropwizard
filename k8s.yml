@@ -29,7 +29,7 @@ spec:
       initContainers:
       - name: init-myservice
         image: nicolasfagotti/hello-world-dropwizard:1.17.6
-        command: ['sh', '-c', "until curl -s 'http://localhost:8883/healthcheck' | grep -q 'false'; do echo waiting for myservice; sleep 2; done"]
+        command: ['sh', '-c', "until curl -s 'http://localhost:8883/healthcheck' | grep -q 'true'; do echo waiting for myservice; sleep 2; done"]
   strategy:
     canary:
       trafficRouting:
