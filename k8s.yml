@@ -24,7 +24,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.7
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -42,7 +42,7 @@ spec:
             name: helloworld-vsvc
             routes:
               - primary
-      scaleDownDelaySeconds: 3600
+      scaleDownDelaySeconds: 1
       steps:
 #        - experiment:
 #            duration: 15m
