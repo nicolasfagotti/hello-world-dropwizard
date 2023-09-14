@@ -26,7 +26,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.4
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -145,49 +145,6 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: mann-whitney
-spec:
-  args:
-  - name: start-time
-  - name: end-time
-  - name: stable-hash
-  - name: canary-hash
-  metrics:
-  - name: mann-whitney
-    interval: 60s
-    failureLimit: 1
-    count: 5
-    provider:
-      kayenta:
-        address: http://kayenta-load-balancer.kayenta.svc.cluster.local:8090
-        application: hello-world-dropwizard
-        metricsAccountName: canary-prometheus
-        canaryConfigName: hello-world-config
-        configurationAccountName: in-memory-store-account
-        storageAccountName: in-memory-store-account
-        threshold:
-          pass: 90
-          marginal: 75
-        scopes:
-        - name: default
-          controlScope:
-#            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
-            scope: "rollouts_pod_template_hash=\"{{args.stable-hash}}\""
-            step: 30                      # How many seconds between each metric datapoint to query
-            start: "{{args.start-time}}"
-            end: "{{args.end-time}}"
-            region: "upwork-services"     # This can be anything. It is only used for building queries
-          experimentScope:
-#            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
-            scope: "rollouts_pod_template_hash=\"{{args.canary-hash}}\""
-            step: 30
-            start: "{{args.start-time}}"
-            end: "{{args.end-time}}"
-            region: "upwork-services"
----
-apiVersion: argoproj.io/v1alpha1
-kind: AnalysisTemplate
-metadata:
   name: min-aca-analyzer
 spec:
   metrics:
@@ -201,44 +158,87 @@ spec:
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.data.ok}"
     successCondition: result == true
----
-apiVersion: argoproj.io/v1alpha1
-kind: AnalysisTemplate
-metadata:
-  name: aca-analyzer
-spec:
-  args:
-  - name: start-time
-  - name: end-time
-  - name: stable-hash
-  - name: canary-hash
-  metrics:
-  - name: aca-analyzer
-    count: 10
-    failureLimit: 1
-    interval: 2m
-    provider:
-      web:
-        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/{{ args.stable-hash }}/{{ args.canary-hash }}"
-        timeoutSeconds: 20 # defaults to 10 seconds
-        jsonPath: "{$.data.ok}"
-    successCondition: result == true
----
-apiVersion: argoproj.io/v1alpha1
-kind: AnalysisTemplate
-metadata:
-  name: gloster-analyzer
-spec:
-  args:
-  - name: service-name
-  metrics:
-  - name: gloster-analyzer
-    initialDelay: "0"
-    count: 10
-    interval: 2m
-    failureLimit: 4
-    provider:
-      web:
-        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/process/{{ args.service-name }}/score"
-        jsonPath: "{$}"
-    successCondition: "result.score >= 0.9 && result.confidence >= 0.1"
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: AnalysisTemplate
+# metadata:
+#   name: aca-analyzer
+# spec:
+#   args:
+#   - name: start-time
+#   - name: end-time
+#   - name: stable-hash
+#   - name: canary-hash
+#   metrics:
+#   - name: aca-analyzer
+#     count: 10
+#     failureLimit: 1
+#     interval: 2m
+#     provider:
+#       web:
+#         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/{{ args.stable-hash }}/{{ args.canary-hash }}"
+#         timeoutSeconds: 20 # defaults to 10 seconds
+#         jsonPath: "{$.data.ok}"
+#     successCondition: result == true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: AnalysisTemplate
+# metadata:
+#   name: gloster-analyzer
+# spec:
+#   args:
+#   - name: service-name
+#   metrics:
+#   - name: gloster-analyzer
+#     initialDelay: "0"
+#     count: 10
+#     interval: 2m
+#     failureLimit: 4
+#     provider:
+#       web:
+#         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/process/{{ args.service-name }}/score"
+#         jsonPath: "{$}"
+#     successCondition: "result.score >= 0.9 && result.confidence >= 0.1"
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: AnalysisTemplate
+# metadata:
+#   name: mann-whitney
+# spec:
+#   args:
+#   - name: start-time
+#   - name: end-time
+#   - name: stable-hash
+#   - name: canary-hash
+#   metrics:
+#   - name: mann-whitney
+#     interval: 60s
+#     failureLimit: 1
+#     count: 5
+#     provider:
+#       kayenta:
+#         address: http://kayenta-load-balancer.kayenta.svc.cluster.local:8090
+#         application: hello-world-dropwizard
+#         metricsAccountName: canary-prometheus
+#         canaryConfigName: hello-world-config
+#         configurationAccountName: in-memory-store-account
+#         storageAccountName: in-memory-store-account
+#         threshold:
+#           pass: 90
+#           marginal: 75
+#         scopes:
+#         - name: default
+#           controlScope:
+# #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.stable-hash}}
+#             scope: "rollouts_pod_template_hash=\"{{args.stable-hash}}\""
+#             step: 30                      # How many seconds between each metric datapoint to query
+#             start: "{{args.start-time}}"
+#             end: "{{args.end-time}}"
+#             region: "upwork-services"     # This can be anything. It is only used for building queries
+#           experimentScope:
+# #            scope: app=hello-world-dropwizard and rollouts-pod-template-hash={{args.canary-hash}}
+#             scope: "rollouts_pod_template_hash=\"{{args.canary-hash}}\""
+#             step: 30
+#             start: "{{args.start-time}}"
+#             end: "{{args.end-time}}"
+#             region: "upwork-services"
