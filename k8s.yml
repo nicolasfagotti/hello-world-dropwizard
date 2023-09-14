@@ -51,15 +51,6 @@ spec:
       analysis:
         templates:
         - templateName: min-aca-analyzer
-        args:
-        - name: service-name
-          value: guestbook-svc.default.svc.cluster.local
-        - name: stable-hash
-          valueFrom:
-            podTemplateHashValue: Stable
-        - name: canary-hash
-          valueFrom:
-            podTemplateHashValue: Latest
       steps:
       #  - experiment:
       #       duration: 15m
@@ -166,7 +157,7 @@ spec:
     interval: 1m
     provider:
       web:
-        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/{{ args.stable-hash }}/{{ args.canary-hash }}"
+        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/hash1/hash2"
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.data.ok}"
     successCondition: result == true
