@@ -26,7 +26,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.7
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -48,6 +48,8 @@ spec:
       analysis:
         templates:
         - templateName: min-aca-analyzer
+        successfulRunHistoryLimit: 1
+        unsuccessfulRunHistoryLimit: 5
       steps:
       #  - experiment:
       #       duration: 15m
@@ -149,9 +151,9 @@ metadata:
 spec:
   metrics:
   - name: aca-analyzer
-    count: 10
+    count: 5
     failureLimit: 1
-    interval: 2m
+    interval: 1m
     provider:
       web:
         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/hash-1/hash-2"
