@@ -19,6 +19,9 @@ spec:
   revisionHistoryLimit: 5 # Default to 10 if not specified
   rollbackWindow:
     revisions: 3
+  analysis:
+    successfulRunHistoryLimit: 1
+    unsuccessfulRunHistoryLimit: 5
   template:
     metadata:
       labels:
@@ -48,8 +51,15 @@ spec:
       analysis:
         templates:
         - templateName: min-aca-analyzer
-        successfulRunHistoryLimit: 1
-        unsuccessfulRunHistoryLimit: 5
+        args:
+        - name: service-name
+          value: guestbook-svc.default.svc.cluster.local
+        - name: stable-hash
+          valueFrom:
+            podTemplateHashValue: Stable
+        - name: latest-hash
+          valueFrom:
+            podTemplateHashValue: Latest
       steps:
       #  - experiment:
       #       duration: 15m
@@ -156,7 +166,7 @@ spec:
     interval: 1m
     provider:
       web:
-        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/hash-1/hash-2"
+        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/{{ args.stable-hash }}/{{ args.canary-hash }}"
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.data.ok}"
     successCondition: result == true
