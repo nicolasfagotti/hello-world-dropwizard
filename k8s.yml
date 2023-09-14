@@ -26,7 +26,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.7
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -45,33 +45,36 @@ spec:
             routes:
               - primary
       scaleDownDelaySeconds: 360
+      analysis:
+        templates:
+        - templateName: min-aca-analyzer
       steps:
-#        - experiment:
-#            duration: 15m
-#            templates:
-#            - name: baseline
-#              specRef: stable
-#              weight: 25
-#            - name: canary
-#              specRef: canary
-#              weight: 25
-#            analyses:
-#            - name: gloster-analyzer
-#              templateName: gloster-analyzer
-#              requiredForCompletion: true
-#              args:
-#              - name: service-name
-#                value: "testDS"
-#              - name: start-time
-#                value: "{{ experiment.availableAt }}"
-#              - name: end-time
-#                value: "{{ experiment.finishedAt }}"
-#              - name: stable-hash
-#                valueFrom:
-#                  podTemplateHashValue: Stable
-#              - name: canary-hash
-#                valueFrom:
-#                  podTemplateHashValue: Latest
+      #  - experiment:
+      #       duration: 15m
+      #       templates:
+      #       - name: baseline
+      #         specRef: stable
+      #         weight: 25
+      #       - name: canary
+      #         specRef: canary
+      #         weight: 25
+      #       analyses:
+      #       - name: gloster-analyzer
+      #         templateName: gloster-analyzer
+      #         requiredForCompletion: true
+      #         args:
+      #         - name: service-name
+      #           value: "testDS"
+      #         - name: start-time
+      #           value: "{{ experiment.availableAt }}"
+      #         - name: end-time
+      #           value: "{{ experiment.finishedAt }}"
+      #         - name: stable-hash
+      #           valueFrom:
+      #             podTemplateHashValue: Stable
+      #         - name: canary-hash
+      #           valueFrom:
+      #             podTemplateHashValue: Latest
         - setWeight: 1
         - pause:
             duration: 5
@@ -181,6 +184,23 @@ spec:
             start: "{{args.start-time}}"
             end: "{{args.end-time}}"
             region: "upwork-services"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: min-aca-analyzer
+spec:
+  metrics:
+  - name: aca-analyzer
+    count: 10
+    failureLimit: 1
+    interval: 2m
+    provider:
+      web:
+        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/hash-1/hash-2"
+        timeoutSeconds: 20 # defaults to 10 seconds
+        jsonPath: "{$.data.ok}"
+    successCondition: result == true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
