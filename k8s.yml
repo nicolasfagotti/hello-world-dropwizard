@@ -29,7 +29,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.4
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -177,7 +177,7 @@ spec:
         url: "http://rollouts-helloworld.upwork-services.svc.cluster.local:8883/healthcheck"
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.deadlocks.healthy}"
-    successCondition: result == true
+    successCondition: result == false
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: AnalysisTemplate
