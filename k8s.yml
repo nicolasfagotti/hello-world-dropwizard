@@ -75,7 +75,7 @@ spec:
       #         - name: canary-hash
       #           valueFrom:
       #             podTemplateHashValue: Latest
-        analysis:
+        - analysis:
           templates:
           - templateName: min-aca-analyzer
         - setWeight: 1
