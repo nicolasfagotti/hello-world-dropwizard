@@ -29,7 +29,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.7
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -77,7 +77,7 @@ spec:
       #             podTemplateHashValue: Latest
         - analysis:
             templates:
-            - templateName: min-aca-analyzer
+            - templateName: hello-initial-rollout-analysis
         - setWeight: 1
         - pause:
             duration: 5
@@ -160,6 +160,23 @@ spec:
         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/hash1/hash2"
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.data.ok}"
+    successCondition: result == true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: hello-initial-rollout-analysis
+spec:
+  metrics:
+  - name: db-health-validation
+    count: 1
+    failureLimit: 0
+    interval: 1m
+    provider:
+      web:
+        url: "http://hello-world-dropwizard.upwork-services.svc.cluster.local:8883/healthcheck"
+        timeoutSeconds: 20 # defaults to 10 seconds
+        jsonPath: "{$.deadlocks.healthy}"
     successCondition: result == true
 # ---
 # apiVersion: argoproj.io/v1alpha1
