@@ -29,7 +29,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.7
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
