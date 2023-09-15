@@ -16,9 +16,9 @@ spec:
     matchLabels:
       app: hello-world-dropwizard
   replicas: 2
-  revisionHistoryLimit: 5 # Default to 10 if not specified
+  revisionHistoryLimit: 2 # Default to 10 if not specified
   rollbackWindow:
-    revisions: 3
+    revisions: 1
   analysis:
     successfulRunHistoryLimit: 1
     unsuccessfulRunHistoryLimit: 5
@@ -47,7 +47,7 @@ spec:
             name: helloworld-vsvc
             routes:
               - primary
-      scaleDownDelaySeconds: 360
+      scaleDownDelaySeconds: 60
       analysis:
         templates:
         - templateName: min-aca-analyzer
