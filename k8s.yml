@@ -174,7 +174,7 @@ spec:
     interval: 1m
     provider:
       web:
-        url: "http://hello-world-dropwizard.upwork-services.svc.cluster.local:8883/healthcheck"
+        url: "http://rollouts-helloworld.upwork-services.svc.cluster.local:8883/healthcheck"
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.deadlocks.healthy}"
     successCondition: result == true
