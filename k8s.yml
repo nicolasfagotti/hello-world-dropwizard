@@ -20,8 +20,8 @@ spec:
   rollbackWindow:
     revisions: 0
   analysis:
-    successfulRunHistoryLimit: 1
-    unsuccessfulRunHistoryLimit: 5
+    successfulRunHistoryLimit: 2
+    unsuccessfulRunHistoryLimit: 2
   template:
     metadata:
       labels:
@@ -29,7 +29,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.7
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.4
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
