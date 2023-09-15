@@ -76,8 +76,8 @@ spec:
       #           valueFrom:
       #             podTemplateHashValue: Latest
         - analysis:
-          templates:
-          - templateName: min-aca-analyzer
+            templates:
+            - templateName: min-aca-analyzer
         - setWeight: 1
         - pause:
             duration: 5
