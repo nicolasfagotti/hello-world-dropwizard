@@ -38,6 +38,8 @@ spec:
   strategy:
     canary:
       trafficRouting:
+        managedRoutes:
+          - name: header-route-1
         istio:
           destinationRule:
             name: helloworld-destrule
@@ -78,6 +80,12 @@ spec:
         - analysis:
             templates:
             - templateName: hello-initial-rollout-analysis
+        - setHeaderRoute:
+          name: "header-route-1"
+          match:
+            - headerName: "version"
+              headerValue:
+                exact: "2"
         - setWeight: 1
         - pause:
             duration: 5
