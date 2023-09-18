@@ -81,11 +81,12 @@ spec:
             templates:
             - templateName: hello-initial-rollout-analysis
         - setHeaderRoute:
-          name: "header-route-1"
-          match:
+            name: "header-route-1"
+            match:
             - headerName: "version"
-              headerValue:
+                headerValue:
                 exact: "2"
+        - pause: {}
         - setWeight: 1
         - pause:
             duration: 5
