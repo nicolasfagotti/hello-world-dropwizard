@@ -29,7 +29,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -51,67 +51,59 @@ spec:
               - primary
       scaleDownDelaySeconds: 60
       steps:
-      #  - experiment:
-      #       duration: 15m
-      #       templates:
-      #       - name: baseline
-      #         specRef: stable
-      #         weight: 25
-      #       - name: canary
-      #         specRef: canary
-      #         weight: 25
-      #       analyses:
-      #       - name: gloster-analyzer
-      #         templateName: gloster-analyzer
-      #         requiredForCompletion: true
-      #         args:
-      #         - name: service-name
-      #           value: "testDS"
-      #         - name: start-time
-      #           value: "{{ experiment.availableAt }}"
-      #         - name: end-time
-      #           value: "{{ experiment.finishedAt }}"
-      #         - name: stable-hash
-      #           valueFrom:
-      #             podTemplateHashValue: Stable
-      #         - name: canary-hash
-      #           valueFrom:
-      #             podTemplateHashValue: Latest
-        - analysis:
-            templates:
-            - templateName: hello-initial-rollout-analysis
-        - setCanaryScale:
-            weight: 50
-        - setHeaderRoute:
-            name: "header-route-1"
-            match:
-            - headerName: "version"
-              headerValue:
-                exact: "2"
-        - pause: {}
-        - setWeight: 1
-        - pause:
-            duration: 5
-        - setWeight: 20
-        - pause:
-            duration: 5
-        - setWeight: 40
-        - pause:
-            duration: 5
-        - setWeight: 60
-        - pause:
-            duration: 5
-        - setWeight: 80
-        - pause:
-            duration: 5
-        - setHeaderRoute:
-            name: "header-route-1"
-            match:
-            - headerName: "version"
-              headerValue:
-                exact: "2"
-        - setWeight: 99
-        - pause: {}
+      # - experiment:
+      #     duration: 15m
+      #     templates:
+      #     - name: baseline
+      #       specRef: stable
+      #       weight: 25
+      #     - name: canary
+      #       specRef: canary
+      #       weight: 25
+      #     analyses:
+      #     - name: gloster-analyzer
+      #       templateName: gloster-analyzer
+      #       requiredForCompletion: true
+      #       args:
+      #       - name: service-name
+      #         value: "testDS"
+      #       - name: start-time
+      #         value: "{{ experiment.availableAt }}"
+      #       - name: end-time
+      #         value: "{{ experiment.finishedAt }}"
+      #       - name: stable-hash
+      #         valueFrom:
+      #           podTemplateHashValue: Stable
+      #       - name: canary-hash
+      #         valueFrom:
+      #           podTemplateHashValue: Latest
+      # - analysis:
+      #     templates:
+      #     - templateName: hello-initial-rollout-analysis
+      # - setCanaryScale:
+      #     weight: 50
+      # - setHeaderRoute:
+      #     name: "header-route-1"
+      #     match:
+      #     - headerName: "version"
+      #       headerValue:
+      #         exact: "2"
+      # - pause: {}
+      - setWeight: 1
+      - pause:
+          duration: 5
+      - setWeight: 20
+      - pause:
+          duration: 5
+      - setWeight: 40
+      - pause:
+          duration: 5
+      - setWeight: 60
+      - pause:
+          duration: 5
+      - setWeight: 80
+      - pause:
+          duration: 5
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
