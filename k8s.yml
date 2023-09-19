@@ -80,12 +80,15 @@ spec:
         - analysis:
             templates:
             - templateName: hello-initial-rollout-analysis
+        - setCanaryScale:
+            weight: 50
         - setHeaderRoute:
             name: "header-route-1"
             match:
             - headerName: "version"
               headerValue:
                 exact: "2"
+        - setWeight: 0
         - pause: {}
         - setWeight: 1
         - pause:
