@@ -29,7 +29,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.4
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.5
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -98,19 +98,20 @@ spec:
         - setWeight: 40
         - pause:
             duration: 5
+        - setWeight: 60
+        - pause:
+            duration: 5
+        - setWeight: 80
+        - pause:
+            duration: 5
         - setHeaderRoute:
             name: "header-route-1"
             match:
             - headerName: "version"
               headerValue:
                 exact: "2"
+        - setWeight: 99
         - pause: {}
-        - setWeight: 60
-        - pause:
-            duration: 500
-        - setWeight: 80
-        - pause:
-            duration: 5
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
