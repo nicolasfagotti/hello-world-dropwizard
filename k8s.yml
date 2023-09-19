@@ -86,6 +86,7 @@ spec:
             - headerName: "version"
               headerValue:
                 exact: "2"
+        - pause: {}
         - setWeight: 1
         - pause:
             duration: 5
