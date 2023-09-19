@@ -29,7 +29,7 @@ spec:
         backstage.io/kubernetes-id: hello-world-dropwizard
     spec:
       containers:
-      - image: nicolasfagotti/hello-world-dropwizard:1.17.6
+      - image: nicolasfagotti/hello-world-dropwizard:1.17.7
         name: hello-world-dropwizard
       # initContainers:
       # - name: init-healthcheck
@@ -88,7 +88,6 @@ spec:
             - headerName: "version"
               headerValue:
                 exact: "2"
-        - setWeight: 0
         - pause: {}
         - setWeight: 1
         - pause:
@@ -99,9 +98,16 @@ spec:
         - setWeight: 40
         - pause:
             duration: 5
+        - setHeaderRoute:
+            name: "header-route-1"
+            match:
+            - headerName: "version"
+              headerValue:
+                exact: "2"
+        - pause: {}
         - setWeight: 60
         - pause:
-            duration: 5
+            duration: 500
         - setWeight: 80
         - pause:
             duration: 5
@@ -160,23 +166,6 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
-  name: min-aca-analyzer
-spec:
-  metrics:
-  - name: aca-analyzer
-    count: 5
-    failureLimit: 1
-    interval: 1m
-    provider:
-      web:
-        url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/hash1/hash2"
-        timeoutSeconds: 20 # defaults to 10 seconds
-        jsonPath: "{$.data.ok}"
-    successCondition: result == true
----
-apiVersion: argoproj.io/v1alpha1
-kind: AnalysisTemplate
-metadata:
   name: hello-initial-rollout-analysis
 spec:
   metrics:
@@ -190,6 +179,23 @@ spec:
         timeoutSeconds: 20 # defaults to 10 seconds
         jsonPath: "{$.deadlocks.healthy}"
     successCondition: result == true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: AnalysisTemplate
+# metadata:
+#   name: min-aca-analyzer
+# spec:
+#   metrics:
+#   - name: aca-analyzer
+#     count: 5
+#     failureLimit: 1
+#     interval: 1m
+#     provider:
+#       web:
+#         url: "http://aca-analyzer.upwork-services.svc.cluster.local:8882/analysis/hash1/hash2"
+#         timeoutSeconds: 20 # defaults to 10 seconds
+#         jsonPath: "{$.data.ok}"
+#     successCondition: result == true
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: AnalysisTemplate
