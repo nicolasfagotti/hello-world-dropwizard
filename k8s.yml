@@ -84,7 +84,7 @@ spec:
             name: "header-route-1"
             match:
             - headerName: "version"
-                headerValue:
+              headerValue:
                 exact: "2"
         - setWeight: 1
         - pause:
